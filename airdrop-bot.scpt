@@ -116,9 +116,62 @@ on mobiusTask()
 		setValue("mobius", "error") of me
 	end try
 end mobiusTask
+--------------------------
+------starBlock------------
+--------------------------
+
+on starBlockTask()
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:"https://starblock.io/airdrop"}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				---------------
+				delay 4
+				tell active tab
+					-- Spreadタブをクリック----
+					repeat 5 times
+						set spreadTabElement to execute javascript "
+							const tabItemElementList = document.getElementsByClassName('tab-control-item-text') ;
+							const spreadTab = Array.from(tabItemElementList).filter(e => e.textContent == 'Spread')[0];
+							spreadTab.click()
+							spreadTab.textContent
+						"
+						if spreadTabElement = missing value then
+							delay 1
+						else
+							exit repeat
+						end if
+					end repeat
+					---------------------------------
+					delay 3
+					-- Spreadボタンをクリック----
+					repeat 5 times
+						set spreadButtonElement to execute javascript "
+							const btnElesForSpread = document.querySelectorAll('.yellow_button a');
+							const spreadBtn = Array.from(btnElesForSpread).filter(e => e.textContent == ' Spread ')[0];
+							spreadBtn.click()
+							spreadBtn.textContent
+						"
+						if spreadButtonElement = missing value then
+							delay 1
+						else
+							setValue("starBlock", "Spread Click Done") of me
+							exit repeat
+						end if
+					end repeat
+				end tell
+			end tell
+		end tell
+	on error
+		setValue("starBlock", "error") of me
+	end try
+end starBlockTask
 
 
-(*
 --------------------------
 ------main---------------
 --------------------------
@@ -135,8 +188,11 @@ setValue("crew3", "weekly connect")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "1d9824e7-b2d9-4235-839d-20f7f7aa282a")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "9df2617f-fcb2-4c0b-87bb-c24edeeb7697")
 clickCrew3DailyConnect("https://zealy.io/c/rabbitx/questboard", "17357b08-c232-4542-8308-527a8aa09090")
-*)
 
+setValue("mobius", "")
 mobiusTask()
+
+setValue("starblock", "")
+starBlockTask()
 
 return resultValue
