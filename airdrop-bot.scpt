@@ -1,3 +1,6 @@
+--------------------------
+------utils---------------
+--------------------------
 global resultValue
 set resultValue to "" & return
 
@@ -5,7 +8,9 @@ on setValue(paramKey, paramValue)
 	global resultValue
 	set resultValue to resultValue & paramKey & ": " & paramValue & return
 end setValue
-
+--------------------------
+------crew3-------------
+--------------------------
 on clickCrew3DailyConnect(targetUrl, eleid)
 	try
 		tell application "Brave Browser"
@@ -53,7 +58,15 @@ on clickCrew3DailyConnect(targetUrl, eleid)
 		setValue(targetUrl, "error") of me
 	end try
 end clickCrew3DailyConnect
+--------------------------
+------mobius------------
+--------------------------
 
+
+
+--------------------------
+------main---------------
+--------------------------
 setValue("crew3", "daily connect")
 clickCrew3DailyConnect("https://zealy.io/c/zetachain/questboard", "fa49700f-c3ed-40a0-96d7-f735a66f1bf9")
 clickCrew3DailyConnect("https://zealy.io/c/zkxprotocol/questboard", "d8b3632c-d487-4007-8bbb-4e87531532c1")
