@@ -62,8 +62,63 @@ end clickCrew3DailyConnect
 ------mobius------------
 --------------------------
 
+on mobiusTask()
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:"https://mobius.market/amm/airdrop/s2"}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				---------------
+				delay 4
+				tell active tab
+					-- collect nowをクリック----
+					repeat 5 times
+						set collectNowElement to execute javascript "
+							const btnElesForCollect = document.getElementsByTagName('button') ;
+							const collectBtn = Array.from(btnElesForCollect).filter(e => e.textContent == ' Collect Now ')[0];
+							collectBtn.click()
+							collectBtn.textContent
+						"
+						if collectNowElement = missing value then
+							delay 1
+						else
+							exit repeat
+						end if
+					end repeat
+					---------------------------------
+					delay 3
+					-- Claimをクリック----
+					repeat 5 times
+						set claimElement to execute javascript "
+							const btnElesForClaim = document.getElementsByTagName('button') ;
+							const claimBtn = Array.from(btnElesForClaim).filter(e => e.textContent == ' Claim ')[0];
+							claimBtn.click()
+							claimBtn.textContent
+						"
+						if claimElement = missing value then
+							delay 1
+						else
+							setValue("mobius", "Claim Click Done") of me
+							exit repeat
+						end if
+					end repeat
+					---------------------------------
+					delay 3
+					-- Share Nowをクリック----
+					---------------------------------
+				end tell
+			end tell
+		end tell
+	on error
+		setValue("mobius", "error") of me
+	end try
+end mobiusTask
 
 
+(*
 --------------------------
 ------main---------------
 --------------------------
@@ -80,5 +135,8 @@ setValue("crew3", "weekly connect")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "1d9824e7-b2d9-4235-839d-20f7f7aa282a")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "9df2617f-fcb2-4c0b-87bb-c24edeeb7697")
 clickCrew3DailyConnect("https://zealy.io/c/rabbitx/questboard", "17357b08-c232-4542-8308-527a8aa09090")
+*)
+
+mobiusTask()
 
 return resultValue
