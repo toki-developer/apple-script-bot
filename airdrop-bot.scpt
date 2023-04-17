@@ -171,6 +171,45 @@ on starBlockTask()
 	end try
 end starBlockTask
 
+--------------------------
+------layer3--------------
+--------------------------
+
+on layer3Task()
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:"https://layer3.xyz/quests"}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				---------------
+				delay 4
+				tell active tab
+					-- gmボタンをクリック----
+					repeat 5 times
+						set spreadTabElement to execute javascript "
+							const buttonElementList = document.getElementsByTagName('button');
+							const gmButton = Array.from(buttonElementList).filter(e => e.textContent == 'gm')[0];
+							gmButton.click()
+							gmButton.textContent
+						"
+						if spreadTabElement = missing value then
+							delay 1
+						else
+							setValue("layer3", "gm Click Done") of me
+							exit repeat
+						end if
+					end repeat
+					---------------------------------
+				end tell
+			end tell
+		end tell
+	on error
+		setValue("layer3", "error") of me
+	end try
+end layer3Task
 
 --------------------------
 ------main---------------
@@ -194,5 +233,8 @@ mobiusTask()
 
 setValue("starblock", "")
 starBlockTask()
+
+setValue("layer3", "")
+layer3Task()
 
 return resultValue
