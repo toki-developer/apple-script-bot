@@ -212,6 +212,50 @@ on layer3Task()
 end layer3Task
 
 --------------------------
+------Magic Eden------------
+--------------------------
+on magicEdenTask()
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:"https://magiceden.io/settings/rewards"}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				---------------
+				delay 3
+				tell active tab
+					-- 対象のクエストをクリック --
+					repeat with i from 0 to 5
+						set ClaimButtonElement to execute javascript "
+							const textElesForClaim = document.getElementsByTagName('p');
+							const claimText = Array.from(textElesForClaim).filter(e => e.textContent == 'Claim')[0];
+							claimText.click()
+							claimText.textContent
+						"
+						if ClaimButtonElement = missing value then
+							delay 1
+						else
+							setValue("Magic Eden", "Claim Click Done") of me
+							exit repeat
+						end if
+						if (i = 5) then
+							setValue("Magic Eden", "Claim Not Found ") of me
+							exit repeat
+						end if
+					end repeat
+					---------------------------------
+					---------------------------------
+				end tell
+			end tell
+		end tell
+	on error
+		setValue("Magic Eden", "error") of me
+	end try
+end magicEdenTask
+
+--------------------------
 ------main---------------
 --------------------------
 setValue("crew3", "daily connect")
@@ -222,11 +266,14 @@ clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "c4fb82be-d0
 clickCrew3DailyConnect("https://zealy.io/c/rabbitx/questboard", "818a19cf-bf96-4810-b0bf-ed99c41e9c76")
 clickCrew3DailyConnect("https://zealy.io/c/fewcha/questboard", "9b06676b-32db-46b5-9d3f-50146afb9cc2")
 clickCrew3DailyConnect("https://zealy.io/c/snsdomains/questboard", "a67c3762-9c2b-4530-8381-bba2e9270bf0")
+clickCrew3DailyConnect("https://zealy.io/c/suipadxyz/questboard", "0de7abfa-c920-4c10-9925-b386b68f88b0")
 
 setValue("crew3", "weekly connect")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "1d9824e7-b2d9-4235-839d-20f7f7aa282a")
 clickCrew3DailyConnect("https://zealy.io/c/suiswap-app/questboard", "9df2617f-fcb2-4c0b-87bb-c24edeeb7697")
 clickCrew3DailyConnect("https://zealy.io/c/rabbitx/questboard", "17357b08-c232-4542-8308-527a8aa09090")
+clickCrew3DailyConnect("https://zealy.io/c/suipadxyz/questboard", "602fa1ba-1255-47ca-b099-8d38a1102428")
+
 
 setValue("mobius", "")
 mobiusTask()
@@ -236,5 +283,8 @@ starBlockTask()
 
 setValue("layer3", "")
 layer3Task()
+
+setValue("Magic Eden", "")
+magicEdenTask()
 
 return resultValue
