@@ -37,6 +37,7 @@ on clickOneItem(titleName, targetURL, clickJsCode)
 					end repeat
 					---------------------------------
 				end tell
+				newTab close
 			end tell
 		end tell
 	on error
@@ -90,12 +91,55 @@ on clickTwoItem(titleName, targetURL, clickJsCode, clickJsCode2)
 						end if
 					end repeat
 				end tell
+				newTab close
 			end tell
 		end tell
 	on error
 		setValue(titleName, "error") of me
 	end try
 end clickTwoItem
+
+on discordPost(titleName, targetURL, postContent)
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:targetURL}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				delay 10
+				tell active tab
+					-- ボタンをクリック----
+					set the clipboard to postContent
+					tell application "System Events"
+						key code {55, 9}
+						delay 2
+						key code 36
+					end tell
+					---------------------------------
+				end tell
+				newTab close
+			end tell
+		end tell
+	on error
+		setValue(titleName, "error") of me
+	end try
+end discordPost
+
+on openTabList(urlList)
+	try
+		tell application "Brave Browser"
+			tell window 1
+				repeat with targetURL in urlList
+					set newTab to make new tab with properties {URL:targetURL}
+				end repeat
+			end tell
+		end tell
+	on error
+		setValue("openTab", "error") of me
+	end try
+end openTabList
 
 --------------------------
 ------crew3-------------
@@ -185,18 +229,61 @@ on magicEdenTask()
 	setValue("Magic Eden", "") of me
 	clickOneItem("Magic Eden", "https://magiceden.io/settings/rewards", "
 							const textElesForClaim = document.getElementsByTagName('p');
-							const claimText = Array.from(textElesForClaim).filter(e => e.textContent == 'Claim')[0];
+							const claimText = Array.from(ele).filter(e => e.textContent == 'Ace Fountain')[0].nextElementSibling.getElementsByTagName('button')[0];
 							claimText.click()
 							claimText.textContent
 						") of me
 end magicEdenTask
 --------------------------
-------main---------------
+------Fusionist--------
 --------------------------
-crew3Task()
-mobiusTask()
-starBlockTask()
-layer3Task()
-magicEdenTask()
+on fusionistTask()
+	setValue("Fusionist", "") of me
+	discordPost("Fusionist", "https://discord.com/channels/926691694680870982/1082506347574206494", "HanahanaDashboard") of me
+	delay 10
+	clickOneItem("Fusionist", "https://ace.fusionist.io/account/endurance", "
+							const pEle = document.getElementsByTagName(`p`);
+							const claimButton = Array.from(pEle).filter(e => e.textContent == 'Ace Fountain')[0].nextElementSibling.getElementsByTagName('button')[0];
+							claimButton.click()
+							claimButton.textContent
+						") of me
+end fusionistTask
+--------------------------
+------main exec--------------
+--------------------------
+
+on mainExecMain()
+	crew3Task() of me
+	mobiusTask() of me
+	starBlockTask() of me
+	layer3Task() of me
+	magicEdenTask() of me
+	fusionistTask() of me
+	openTabList({"https://oaschoice.com/vote", "https://ace.fusionist.io/account/endurance"}) of me
+end mainExecMain
+
+on mainExecSub()
+	crew3Task() of me
+	mobiusTask() of me
+	starBlockTask() of me
+	layer3Task() of me
+	magicEdenTask() of me
+	openTabList({"https://oaschoice.com/vote"}) of me
+end mainExecSub
+
+mainExecMain()
+-- mainExecSub()
 
 return resultValue
+
+
+(*
+set urlList to
+tell application "Brave Browser"
+	tell window 1
+		repeat with targetURL in urlList
+			make new tab with properties {URL:targetURL}
+		end repeat
+	end tell
+end tell
+*)
