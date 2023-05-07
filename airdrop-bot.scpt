@@ -119,6 +119,7 @@ on discordPost(titleName, targetURL, postContent)
 					end tell
 					---------------------------------
 				end tell
+				delay 4
 				newTab close
 			end tell
 		end tell
@@ -126,6 +127,29 @@ on discordPost(titleName, targetURL, postContent)
 		setValue(titleName, "error") of me
 	end try
 end discordPost
+
+on discordGet(titleName, targetURL, getJsCode)
+	set targetText to ""
+	try
+		tell application "Brave Browser"
+			tell window 1
+				-- タブを開く---
+				set newTab to make new tab with properties {URL:targetURL}
+				repeat while loading of active tab
+					delay 0.2
+				end repeat
+				delay 10
+				tell active tab
+					set targetText to execute javascript getJsCode
+				end tell
+				newTab close
+			end tell
+		end tell
+	on error
+		setValue(titleName, "error") of me
+	end try
+	return targetText
+end discordGet
 
 on openTabList(urlList)
 	try
@@ -239,7 +263,13 @@ end magicEdenTask
 --------------------------
 on fusionistTask()
 	setValue("Fusionist", "") of me
-	discordPost("Fusionist", "https://discord.com/channels/926691694680870982/1082506347574206494", "HanahanaDashboard") of me
+	set postKeyword to discordGet("Fusionist", "https://discord.com/channels/926691694680870982/1082505673193041971", "
+					const lis = document.querySelector('[data-list-id=\"chat-messages\"]').querySelectorAll('li');
+					lastLi = lis[lis.length - 1];
+					lastLi.querySelector('code').textContent;
+					") of me
+	delay 1
+	discordPost("Fusionist", "https://discord.com/channels/926691694680870982/1082506347574206494", postKeyword) of me
 	delay 10
 	clickOneItem("Fusionist", "https://ace.fusionist.io/account/endurance", "
 							const pEle = document.getElementsByTagName(`p`);
@@ -254,7 +284,7 @@ end fusionistTask
 
 on mainExecMain()
 	crew3Task() of me
-	mobiusTask() of me
+	-- mobiusTask() of me
 	starBlockTask() of me
 	layer3Task() of me
 	magicEdenTask() of me
@@ -264,7 +294,7 @@ end mainExecMain
 
 on mainExecSub()
 	crew3Task() of me
-	mobiusTask() of me
+	-- mobiusTask() of me
 	starBlockTask() of me
 	layer3Task() of me
 	magicEdenTask() of me
@@ -272,13 +302,12 @@ on mainExecSub()
 end mainExecSub
 
 mainExecMain()
--- mainExecSub()
+--mainExecSub()
 
 return resultValue
 
-
 (*
-set urlList to
+set urlList to {"https://labs.zetachain.com/swap", "https://link3.to/cyberconnect/fanclub", "https://syncswap.xyz/swap", "https://supraoracles.com/blastoff/learn", "https://suiswap.app/app/"}
 tell application "Brave Browser"
 	tell window 1
 		repeat with targetURL in urlList
